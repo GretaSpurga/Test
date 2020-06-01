@@ -1,0 +1,77 @@
+using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _0526testavimas1.nd0601
+{
+    class Checkboxai
+    {
+        private static IWebDriver _checkboxai;
+        private static string check1;
+        private static ReadOnlyCollection<IWebElement> checkboxai;
+
+        [OneTimeTearDown]
+
+        public static void SetUpChrome()
+        {
+            _checkboxai = new ChromeDriver
+            {
+                Url = "https://www.seleniumeasy.com/test/basic-checkbox-demo.html"
+            };
+            _checkboxai.Manage().Window.Maximize();
+        }
+        private static bool Exists(By by)
+        {
+            if (_checkboxai.FindElements(by).Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        [Order(1)]
+        [TestCase(TestName = "Pazymim checkboxa")]
+        public static void PazymimCheckbox()
+        {
+            var checkbox = _checkboxai.FindElement(By.Id("IsAgeSelected"));
+            checkbox.Click();
+        }
+
+        [Order(2)]
+        [TestCase(TestName = "Pazymim visus checkbox`us")]
+        public static void MarkAll()
+        {
+            var checkboxai = _checkboxai.FindElements(By.ClassName("cb1-element"));
+            foreach (var checkbox in checkboxai)
+            {
+                checkbox.Click();
+            }
+        }
+        [Order(3)]
+        [TestCase(TestName = "Atzymim visus checkbox`us")]
+        public static void UnmarkAll() //nuo cia nebesuprantu
+        {
+
+                _checkboxai.FindElements(By.Id("check1")).Click();
+             
+
+            var checkboxai = _checkboxai.FindElements(By.CssSelector("input[class='cb1-element']"));
+
+            foreach (var checkbox in checkboxai)
+            {
+                Assert.AreEqual(false, checkbox.Selected, "Atzymeti VISAS varneles");
+            }
+        }
+        [OneTimeTearDown]
+        public static void CloseCheckboxai()
+        {
+            _checkboxai.Quit();
+        }
+    }
+}
